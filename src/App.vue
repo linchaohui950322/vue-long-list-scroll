@@ -1,17 +1,46 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Scroll
+      :list="list"
+      :activedIndex="activedIndex"
+      @loadingEvent="loadingEvent"
+    >
+      <template v-slot="message">
+        <div style="height: 50px;color: #000;">{{ message.content }}</div>
+      </template>
+      <template v-slot:loadingMoreText>
+        <div style="background-color: red;">加载更多</div>
+      </template>
+    </Scroll>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Scroll from './components/scroll.vue'
+
+const list = []
+for (let i = 0; i < 1000; i++) {
+  list.push(i + 1)
+}
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Scroll
+  },
+  data () {
+    return {
+      list,
+      activedIndex: 100,
+      loadingEvent () {
+        const cache = []
+        let i = 0
+        while (i++ < 10) {
+          cache.push(list.length + i + 1)
+        }
+        list.push(...cache)
+      }
+    }
   }
 }
 </script>
@@ -24,5 +53,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  font-size: 37.5px;
 }
 </style>
